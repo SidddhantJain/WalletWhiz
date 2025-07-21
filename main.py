@@ -1,46 +1,33 @@
-# WalletWhiz/main.py
+#-- filepath: d:\Siddhant\projects\WalletWhiz\WalletWhiz\main.py
+# main.py
 
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget
-from database.db_manager import DBManager
+from PyQt5.QtWidgets import QApplication
+from ui.login_window import LoginWindow
+from ui.main_window import WalletWhizMainWindow
 
-class WalletWhizMain(QMainWindow):
+class WalletWhizApp:
     def __init__(self):
-        super().__init__()
-
-        self.setWindowTitle("WalletWhiz 💸")
-        self.setGeometry(300, 150, 800, 600)
-
-        # Connect to database
-        self.db = DBManager()
-
-        # UI setup
-        self.setup_ui()
-
-    def setup_ui(self):
-        layout = QVBoxLayout()
+        self.app = QApplication(sys.argv)
+        self.login_window = None
+        self.main_window = None
         
-        welcome_label = QLabel("Welcome to WalletWhiz!")
-        welcome_label.setStyleSheet("font-size: 24px; font-weight: bold;")
-        layout.addWidget(welcome_label)
+    def show_login(self):
+        """Show login window"""
+        self.login_window = LoginWindow()
+        self.login_window.login_successful.connect(self.on_login_success)
+        self.login_window.show()
+        
+    def on_login_success(self, user_id):
+        """Handle successful login"""
+        self.main_window = WalletWhizMainWindow(user_id)
+        self.main_window.show()
+        
+    def run(self):
+        """Run the application"""
+        self.show_login()
+        return self.app.exec_()
 
-        # Example: Show total transactions count
-        transactions = self.db.get_transactions()
-        count_label = QLabel(f"Total Transactions Found: {len(transactions)}")
-        count_label.setStyleSheet("font-size: 16px;")
-        layout.addWidget(count_label)
-
-        container = QWidget()
-        container.setLayout(layout)
-        self.setCentralWidget(container)
-
-    def closeEvent(self, event):
-        # Ensure DB connection is closed
-        self.db.close()
-        event.accept()
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = WalletWhizMain()
-    window.show()
-    sys.exit(app.exec_())
+if __name__ == '__main__':
+    app = WalletWhizApp()
+    sys.exit(app.run())

@@ -1,0 +1,7 @@
+PyQt5==5.15.9
+mysql-connector-python==8.1.0
+bcrypt==4.0.1
+# Optional dependencies - install separately if needed
+# matplotlib==3.7.2
+# pandas==2.0.3
+# reportlab==4.0.4

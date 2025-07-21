@@ -2,42 +2,13 @@
 
 
 WalletWhiz/
-
-│
-
-├── main.py                      # Entry point for the app
-
 ├── database/
-
-│   └── db_manager.py            # SQLite handler class
-
+│   └── db_manager.py         # Handles all MySQL connection and CRUD operations
 ├── ui/
+│   └── main_window.py        # Defines the main application window and its UI elements
+├── core/
+│   └── __init__.py           # Placeholder for future core logic modules
+├── main.py                   # Entry point of the application
+├── config.py                 # Stores database credentials and other configurations
+└── requirements.txt          # Lists all Python dependencies (e.g., mysql-connector-python, PyQt5)
 
-│   ├── main_window.ui           # UI file from Qt Designer
-
-│   └── icons/                   # Icons for categories/buttons
-
-├── models/
-
-│   ├── transaction.py           # Transaction model class
-
-│   └── budget.py                # Budget model class
-
-├── controllers/
-
-│   ├── main_controller.py       # Event logic / UI bindings
-
-│   └── charts.py                # matplotlib visualizations
-
-├── utils/
-
-│   ├── helpers.py               # Common utility functions
-
-
-│   └── export.py                # CSV/PDF export handler
-
-├── assets/
-
-│   └── sample_data.csv          # Sample data for import
-
-└── README.md
