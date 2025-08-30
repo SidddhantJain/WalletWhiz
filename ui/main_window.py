@@ -27,11 +27,14 @@ class WalletWhizMainWindow(QWidget):
         self.currency = "₹"
         self.theme = "Light"
         main_layout = QVBoxLayout(self)
+        main_layout.setSpacing(16)
+        main_layout.setContentsMargins(18, 18, 18, 18)
 
         # Top bar with logout
         top_bar = QHBoxLayout()
-        top_bar.addWidget(QLabel(f"User ID: {user_id}"))
+        top_bar.addWidget(QLabel(f"<b>User ID:</b> {user_id}"))
         logout_btn = QPushButton("Logout")
+        logout_btn.setStyleSheet("QPushButton { background: #F44336; color: white; border-radius: 8px; padding: 6px 18px; font-weight: bold; }")
         logout_btn.clicked.connect(self.handle_logout)
         top_bar.addStretch()
         top_bar.addWidget(logout_btn)
@@ -39,73 +42,114 @@ class WalletWhizMainWindow(QWidget):
 
         # Tabs
         self.tabs = QTabWidget()
+        self.tabs.setStyleSheet("""
+            QTabWidget::pane { border: none; }
+            QTabBar::tab { background: #f8f9fa; border-radius: 8px; padding: 10px 24px; font-weight: bold; margin: 2px; }
+            QTabBar::tab:selected { background: #667eea; color: white; }
+            QTabBar::tab:hover { background: #e3f2fd; }
+        """)
         main_layout.addWidget(self.tabs)
 
         # Dashboard Tab
         dashboard_tab = QWidget()
         dashboard_layout = QVBoxLayout(dashboard_tab)
+        dashboard_layout.setSpacing(12)
+        dashboard_layout.setContentsMargins(12, 12, 12, 12)
+        dashboard_group = QGroupBox("Dashboard Summary")
+        dashboard_group.setStyleSheet("QGroupBox { font-size: 16px; font-weight: bold; }")
+        dashboard_group_layout = QVBoxLayout(dashboard_group)
         self.dashboard_summary = QLabel("Total Income: 0 | Expenses: 0 | Balance: 0")
-        dashboard_layout.addWidget(self.dashboard_summary)
-        dashboard_layout.addWidget(QLabel("Pie/Bar Chart (Demo)"))
-        dashboard_layout.addWidget(QCalendarWidget())
+        self.dashboard_summary.setStyleSheet("font-size: 18px; font-weight: bold; color: #333;")
+        dashboard_group_layout.addWidget(self.dashboard_summary)
+        dashboard_group_layout.addWidget(QLabel("Pie/Bar Chart (Demo)"))
+        dashboard_group_layout.addWidget(QCalendarWidget())
+        dashboard_layout.addWidget(dashboard_group)
         self.tabs.addTab(dashboard_tab, "Dashboard")
 
         # Transactions Tab
         transactions_tab = QWidget()
         transactions_layout = QVBoxLayout(transactions_tab)
-        form_layout = QHBoxLayout()
+        transactions_layout.setSpacing(10)
+        transactions_layout.setContentsMargins(10, 10, 10, 10)
+        trans_group = QGroupBox("Add Transaction")
+        trans_group.setStyleSheet("QGroupBox { font-size: 15px; font-weight: bold; }")
+        form_layout = QHBoxLayout(trans_group)
         self.trans_type = QComboBox()
         self.trans_type.addItems(["Income", "Expense"])
+        self.trans_type.currentTextChanged.connect(self.refresh_budget)  # Update budget on type change
         form_layout.addWidget(self.trans_type)
         self.trans_amount = QDoubleSpinBox()
         self.trans_amount.setMaximum(1000000)
+        self.trans_amount.setPrefix(self.currency)
         form_layout.addWidget(self.trans_amount)
         self.trans_category = QComboBox()
         self.trans_category.addItems(["Food", "Rent", "Transport", "Other"])
+        self.trans_category.currentTextChanged.connect(self.refresh_budget)  # Update budget on category change
         form_layout.addWidget(self.trans_category)
         self.trans_notes = QLineEdit()
-        self.trans_notes.setPlaceholderText("Notes")
+        self.trans_notes.setPlaceholderText("Notes (#tag supported)")
         form_layout.addWidget(self.trans_notes)
         self.trans_date = QDate.currentDate()
         self.trans_date_widget = QCalendarWidget()
         self.trans_date_widget.setMaximumHeight(150)
         form_layout.addWidget(self.trans_date_widget)
         add_btn = QPushButton("Add")
+        add_btn.setStyleSheet("QPushButton { background: #4CAF50; color: white; border-radius: 8px; font-weight: bold; }")
         add_btn.clicked.connect(self.add_transaction)
         form_layout.addWidget(add_btn)
-        transactions_layout.addLayout(form_layout)
+        transactions_layout.addWidget(trans_group)
 
+        table_group = QGroupBox("Transactions")
+        table_group.setStyleSheet("QGroupBox { font-size: 15px; font-weight: bold; }")
+        table_layout = QVBoxLayout(table_group)
         self.transactions_table = QTableWidget(0, 6)
         self.transactions_table.setHorizontalHeaderLabels(
             ["Date", "Type", "Amount", "Category", "Notes", "Actions"]
         )
-        transactions_layout.addWidget(self.transactions_table)
+        self.transactions_table.setStyleSheet("QTableWidget { font-size: 13px; }")
+        table_layout.addWidget(self.transactions_table)
+        transactions_layout.addWidget(table_group)
         self.tabs.addTab(transactions_tab, "Transactions")
 
         # Budget Tab
         budget_tab = QWidget()
         budget_layout = QVBoxLayout(budget_tab)
-        budget_form = QHBoxLayout()
+        budget_layout.setSpacing(10)
+        budget_layout.setContentsMargins(10, 10, 10, 10)
+        budget_group = QGroupBox("Budget Planner")
+        budget_group.setStyleSheet("QGroupBox { font-size: 15px; font-weight: bold; }")
+        budget_form = QHBoxLayout(budget_group)
         self.budget_category = QComboBox()
         self.budget_category.addItems(["Food", "Rent", "Transport", "Other"])
+        self.budget_category.currentTextChanged.connect(self.refresh_budget)  # Update budget on category change
         budget_form.addWidget(self.budget_category)
         self.budget_limit = QDoubleSpinBox()
         self.budget_limit.setMaximum(1000000)
+        self.budget_limit.setPrefix(self.currency)
         budget_form.addWidget(self.budget_limit)
         set_budget_btn = QPushButton("Set Budget")
+        set_budget_btn.setStyleSheet("QPushButton { background: #007bff; color: white; border-radius: 8px; font-weight: bold; }")
         set_budget_btn.clicked.connect(self.set_budget)
         budget_form.addWidget(set_budget_btn)
-        budget_layout.addLayout(budget_form)
+        budget_layout.addWidget(budget_group)
         self.budget_bar = QProgressBar()
+        self.budget_bar.setStyleSheet("""
+            QProgressBar { border-radius: 8px; background: #f8f9fa; font-weight: bold; height: 24px; }
+            QProgressBar::chunk { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #4CAF50, stop:1 #F44336); border-radius: 8px; }
+        """)
         budget_layout.addWidget(self.budget_bar)
         self.budget_alert = QLabel("")
+        self.budget_alert.setStyleSheet("font-size: 14px; color: #F44336; font-weight: bold;")
         budget_layout.addWidget(self.budget_alert)
         self.tabs.addTab(budget_tab, "Budget")
 
         # Reports Tab
         reports_tab = QWidget()
         reports_layout = QVBoxLayout(reports_tab)
+        reports_layout.setSpacing(10)
+        reports_layout.setContentsMargins(10, 10, 10, 10)
         export_btn = QPushButton("Export CSV")
+        export_btn.setStyleSheet("QPushButton { background: #764ba2; color: white; border-radius: 8px; font-weight: bold; }")
         export_btn.clicked.connect(self.export_csv)
         reports_layout.addWidget(export_btn)
         self.tabs.addTab(reports_tab, "Reports")
@@ -113,7 +157,10 @@ class WalletWhizMainWindow(QWidget):
         # Settings Tab
         settings_tab = QWidget()
         settings_layout = QVBoxLayout(settings_tab)
+        settings_layout.setSpacing(10)
+        settings_layout.setContentsMargins(10, 10, 10, 10)
         currency_label = QLabel("Currency:")
+        currency_label.setStyleSheet("font-weight: bold;")
         settings_layout.addWidget(currency_label)
         self.currency_combo = QComboBox()
         self.currency_combo.addItems(["₹", "$", "€"])
@@ -121,6 +168,7 @@ class WalletWhizMainWindow(QWidget):
         self.currency_combo.currentTextChanged.connect(self.change_currency)
         settings_layout.addWidget(self.currency_combo)
         theme_label = QLabel("Theme:")
+        theme_label.setStyleSheet("font-weight: bold;")
         settings_layout.addWidget(theme_label)
         self.theme_combo = QComboBox()
         self.theme_combo.addItems(["Light", "Dark"])
@@ -128,6 +176,7 @@ class WalletWhizMainWindow(QWidget):
         self.theme_combo.currentTextChanged.connect(self.change_theme)
         settings_layout.addWidget(self.theme_combo)
         reset_btn = QPushButton("Reset Data")
+        reset_btn.setStyleSheet("QPushButton { background: #F44336; color: white; border-radius: 8px; font-weight: bold; }")
         reset_btn.clicked.connect(self.reset_data)
         settings_layout.addWidget(reset_btn)
         self.tabs.addTab(settings_tab, "Settings")
@@ -135,9 +184,14 @@ class WalletWhizMainWindow(QWidget):
         # Shared Finances Tab
         shared_tab = QWidget()
         shared_layout = QVBoxLayout(shared_tab)
-        lend_form = QHBoxLayout()
+        shared_layout.setSpacing(10)
+        shared_layout.setContentsMargins(10, 10, 10, 10)
+        lend_group = QGroupBox("Add Lending/Borrowing")
+        lend_group.setStyleSheet("QGroupBox { font-size: 15px; font-weight: bold; }")
+        lend_form = QHBoxLayout(lend_group)
         self.lend_amount = QDoubleSpinBox()
         self.lend_amount.setMaximum(1000000)
+        self.lend_amount.setPrefix(self.currency)
         lend_form.addWidget(self.lend_amount)
         self.lend_person = QLineEdit()
         self.lend_person.setPlaceholderText("Person")
@@ -149,22 +203,32 @@ class WalletWhizMainWindow(QWidget):
         self.lend_due.setPlaceholderText("Due Date")
         lend_form.addWidget(self.lend_due)
         add_lend_btn = QPushButton("Add")
+        add_lend_btn.setStyleSheet("QPushButton { background: #007bff; color: white; border-radius: 8px; font-weight: bold; }")
         add_lend_btn.clicked.connect(self.add_lending)
         lend_form.addWidget(add_lend_btn)
-        shared_layout.addLayout(lend_form)
+        shared_layout.addWidget(lend_group)
+        lending_table_group = QGroupBox("Shared Finances")
+        lending_table_group.setStyleSheet("QGroupBox { font-size: 15px; font-weight: bold; }")
+        lending_table_layout = QVBoxLayout(lending_table_group)
         self.lending_table = QTableWidget(0, 5)
         self.lending_table.setHorizontalHeaderLabels(
             ["Amount", "Person", "Reason", "Due Date", "Status"]
         )
-        shared_layout.addWidget(self.lending_table)
+        self.lending_table.setStyleSheet("QTableWidget { font-size: 13px; }")
+        lending_table_layout.addWidget(self.lending_table)
+        shared_layout.addWidget(lending_table_group)
         self.tabs.addTab(shared_tab, "Shared Finances")
 
         # Insights Tab
         insights_tab = QWidget()
         insights_layout = QVBoxLayout(insights_tab)
+        insights_layout.setSpacing(10)
+        insights_layout.setContentsMargins(10, 10, 10, 10)
         self.insights_label = QLabel("Insights will appear here.")
+        self.insights_label.setStyleSheet("font-size: 15px; font-weight: bold; color: #333;")
         insights_layout.addWidget(self.insights_label)
         show_insights_btn = QPushButton("Show Insights")
+        show_insights_btn.setStyleSheet("QPushButton { background: #764ba2; color: white; border-radius: 8px; font-weight: bold; }")
         show_insights_btn.clicked.connect(self.show_insights)
         insights_layout.addWidget(show_insights_btn)
         self.tabs.addTab(insights_tab, "Insights")
@@ -203,6 +267,7 @@ class WalletWhizMainWindow(QWidget):
             self.transactions_table.setItem(i, 4, QTableWidgetItem(t["notes"]))
             # Actions
             delete_btn = QPushButton("Delete")
+            delete_btn.setStyleSheet("QPushButton { background: #F44336; color: white; border-radius: 8px; font-weight: bold; }")
             delete_btn.clicked.connect(lambda _, row=i: self.delete_transaction(row))
             self.transactions_table.setCellWidget(i, 5, delete_btn)
 
@@ -210,7 +275,7 @@ class WalletWhizMainWindow(QWidget):
         del self.transactions[row]
         self.refresh_transactions()
         self.refresh_dashboard()
-        self.refresh_budget()
+        self.refresh_budget()  # Ensure budget is updated after deletion
 
     # Budget
     def set_budget(self):
@@ -253,7 +318,11 @@ class WalletWhizMainWindow(QWidget):
     # Settings
     def change_currency(self, text):
         self.currency = text
+        self.trans_amount.setPrefix(self.currency)
+        self.budget_limit.setPrefix(self.currency)
+        self.lend_amount.setPrefix(self.currency)
         self.refresh_dashboard()
+        self.refresh_budget()
 
     def change_theme(self, text):
         self.theme = text
@@ -307,3 +376,15 @@ class WalletWhizMainWindow(QWidget):
         if reply == QMessageBox.Yes:
             self.close()
             self.logout_requested.emit()
+
+    def refresh_heatmap(self):
+        # Stub for calendar heatmap update
+        # Implement actual heatmap logic here later
+        pass
+
+    def refresh_achievements(self):
+        # Stub for achievements logic
+        # Implement actual achievements logic here later
+        achievements = check_achievements(self.transactions)
+        if achievements:
+            QMessageBox.information(self, "Achievements", "\n".join(achievements))

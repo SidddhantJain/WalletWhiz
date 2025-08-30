@@ -1,0 +1,216 @@
+# Software Requirement Specification (SRS)
+## For: WalletWhiz - Smart Personal Finance Manager
+
+---
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Overall Description](#overall-description)
+3. [Specific Requirements](#specific-requirements)
+4. [External Interface Requirements](#external-interface-requirements)
+5. [Other Requirements](#other-requirements)
+6. [Appendices](#appendices)
+
+---
+
+## 1. Introduction
+
+### 1.1 Purpose
+This SRS defines the requirements for WalletWhiz, a comprehensive personal finance management application. The goal is to provide users with powerful tools to track, analyze, and optimize their financial activities, both personal and shared.
+
+### 1.2 Scope
+WalletWhiz is a cross-platform desktop application (Windows, Linux, MacOS) that enables users to:
+- Manage transactions (income, expenses, lending/borrowing)
+- Plan and monitor budgets
+- Visualize financial data with dashboards and reports
+- Gain insights through analytics and AI
+- Customize settings and backup data
+
+### 1.3 Definitions, Acronyms, and Abbreviations
+| Term      | Definition |
+|-----------|------------|
+| SRS       | Software Requirement Specification |
+| UI        | User Interface |
+| CSV       | Comma-Separated Values |
+| SQLite    | Lightweight database engine |
+| Cloud Backup | Optional online data storage |
+| AI        | Artificial Intelligence |
+
+---
+
+## 2. Overall Description
+
+### 2.1 Product Perspective
+WalletWhiz is a standalone application, designed to be modular and extensible. It can operate offline using local storage, with optional cloud backup and sync.
+
+### 2.2 Product Functions
+- **Transaction Management:** Add, edit, delete, categorize, tag, and attach notes/receipts to transactions.
+- **Budget Planner:** Set monthly limits, visualize usage, receive alerts, and track savings goals.
+- **Dashboard:** View summaries, charts, and calendar heatmaps.
+- **Reports:** Generate, compare, and export financial reports; import bank statements.
+- **Shared Finances:** Track lending/borrowing, due dates, and balances.
+- **Smart Insights:** AI-driven analysis, predictions, and suggestions.
+- **Settings:** Customize currency, theme, backup, and security options.
+- **Achievements:** Gamify savings and financial discipline.
+
+### 2.3 User Classes and Characteristics
+- **General Users:** Individuals/families managing personal finances.
+- **Small Business Owners:** Managing business and shared expenses.
+- **Advanced Users:** Interested in analytics, cloud backup, and AI insights.
+
+### 2.4 Operating Environment
+- Desktop OS: Windows, Linux, MacOS
+- Python 3.x, PyQt5, SQLite
+- Optional: Internet for cloud backup
+
+### 2.5 Design and Implementation Constraints
+- Python and PyQt5 for UI
+- SQLite for local data
+- Modular, maintainable codebase
+
+### 2.6 User Documentation
+- User manual (PDF/online)
+- In-app help and tooltips
+
+### 2.7 Assumptions and Dependencies
+- Users have basic computer literacy
+- Python and dependencies installed
+- Internet required for cloud features
+
+---
+
+## 3. Specific Requirements
+
+### 3.1 Functional Requirements
+
+#### 3.1.1 Transaction Management
+- Add, edit, delete transactions (income/expense/lending/borrowing)
+- Categorize and tag transactions
+- Attach notes and receipts/images
+- Filter/search by category, tag, date
+- Auto-suggest tags based on history
+
+#### 3.1.2 Budget Planner
+- Set monthly limits per category
+- Visual usage bars and alerts for overspending
+- Pie/bar charts for budget progress
+- Goal-based budgeting (set savings goals, track progress)
+
+#### 3.1.3 Dashboard
+- Display total income, expenses, balance
+- Show latest transactions
+- Visualize data with charts (pie, bar)
+- Calendar view with spending heatmap
+
+#### 3.1.4 Reports
+- View monthly/yearly expense breakdown
+- Export data to CSV/PDF
+- Compare two months (charts)
+- Import bank statements (CSV), auto-categorize
+
+#### 3.1.5 Shared Finances
+- Track money lent/borrowed, due dates, paid/unpaid status
+- Alerts for due payments
+- Balance tracker per person
+- Export lending/borrowing summary
+
+#### 3.1.6 Smart Insights
+- AI-driven analysis of spending patterns
+- Predictive expense estimation
+- Savings suggestions
+- Natural language queries (e.g., "How much did I spend on travel in June?")
+
+#### 3.1.7 Settings
+- Change currency
+- Theme toggle (Dark/Light)
+- Data reset
+- Backup/restore (local/cloud)
+- Password protection (optional)
+
+#### 3.1.8 Achievements & Motivation
+- Track savings milestones
+- Gamify saving goals (badges, streaks)
+
+### 3.2 Non-Functional Requirements
+
+#### 3.2.1 Performance
+- Fast transaction entry and search
+- Responsive UI
+
+#### 3.2.2 Reliability
+- Data integrity (local backup, optional cloud sync)
+- Robust error handling and recovery
+
+#### 3.2.3 Usability
+- Intuitive, modern UI
+- Tooltips and help for all major features
+
+#### 3.2.4 Security
+- Local data encryption (optional)
+- Secure cloud backup (encrypted)
+- Password protection for sensitive data
+
+#### 3.2.5 Portability
+- Runs on Windows, Linux, MacOS
+
+#### 3.2.6 Maintainability
+- Modular codebase
+- Clear documentation
+
+#### 3.2.7 Scalability
+- Support for large transaction volumes
+- Extendable for future features (mobile app, more analytics)
+
+---
+
+## 4. External Interface Requirements
+
+### 4.1 User Interfaces
+- Main dashboard with tabs for all major functionalities
+- Forms for transaction/budget entry
+- Tables for viewing/filtering data
+- Charts and calendar views
+- Settings and help dialogs
+
+### 4.2 Hardware Interfaces
+- Standard desktop/laptop hardware
+
+### 4.3 Software Interfaces
+- SQLite database
+- Optional: Cloud APIs (Google Drive, Dropbox, etc.)
+
+### 4.4 Communication Interfaces
+- Local file system for backup/restore
+- Internet for cloud sync (optional)
+
+---
+
+## 5. Other Requirements
+
+### 5.1 Future Enhancements
+- Mobile companion app (Android/iOS)
+- Voice/OCR input for transactions
+- Advanced analytics and AI features
+- Integration with bank APIs
+- Scheduled backups and notifications
+
+---
+
+## 6. Appendices
+
+### 6.1 Glossary
+- **Transaction:** Any financial activity (income, expense, lending, borrowing)
+- **Budget:** Planned spending limit per category
+- **Tag:** Keyword for filtering/searching transactions
+- **Heatmap:** Calendar visualization of spending intensity
+- **Achievement:** Badge or milestone for financial discipline
+
+### 6.2 References
+- Design documents
+- User manual
+- Python, PyQt5, SQLite documentation
+
+---
+
+**End of SRS Document**

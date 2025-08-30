@@ -1,0 +1,61 @@
+# Problem Statement: WalletWhiz - Smart Personal Finance Manager
+
+## Overview
+WalletWhiz is a comprehensive desktop application designed to help individuals, families, and small business owners efficiently manage their personal and shared finances. The system aims to provide users with powerful tools to track transactions, plan budgets, analyze spending, manage shared expenses, and gain actionable insights for better financial decision-making.
+
+## Major Functionalities
+
+1. **Transaction Management**
+   - Add, edit, delete, and categorize income and expense transactions.
+   - Support for tagging, notes, and attachments (e.g., receipts, images).
+   - Advanced search and filtering by category, tag, and date.
+
+2. **Budget Planner**
+   - Set monthly limits for different spending categories.
+   - Visual usage bars and alerts for overspending.
+   - Goal-based budgeting and progress tracking.
+
+3. **Dashboard & Reports**
+   - Visual dashboard summarizing income, expenses, and balance.
+   - Pie/bar charts and calendar heatmaps for spending analysis.
+   - Generate and export monthly/yearly reports; compare periods.
+
+4. **Shared Finances Tracker**
+   - Track money lent or borrowed, due dates, and paid/unpaid status.
+   - Alerts for due payments and balance tracker per person.
+   - Export lending/borrowing summary.
+
+5. **Smart Insights & Automation**
+   - AI-driven analysis of spending patterns and predictive expense estimation.
+   - Auto-suggest tags and categories based on transaction history.
+   - Detect recurring payments and provide savings suggestions.
+
+## Additional Advanced Functionalities
+- **Bank Statement Import:** Upload and auto-parse bank CSV statements, with customizable mapping rules.
+- **Achievements & Motivation:** Gamify savings goals and financial discipline with badges and streaks.
+- **Cloud Backup & Sync:** Offline-first operation with optional encrypted cloud backup and scheduled sync.
+- **Mobile Companion App (Future):** Capture expenses on-the-go and sync with desktop.
+
+## Detailed Problem Statement
+
+### Who is the application for?
+WalletWhiz is for anyone who wants to take control of their finances, including individuals, families, and small business owners.
+
+### What problem will it solve?
+It solves the problem of financial disorganization, lack of visibility into spending, difficulty in maintaining budgets, and confusion in managing shared expenses. It also addresses the need for actionable insights and automation in personal finance.
+
+### Where will it be used?
+WalletWhiz will be used on personal computers (Windows, Linux, MacOS) and, in future, on mobile devices. It is suitable for home, office, and on-the-go usage.
+
+### When is it needed?
+Whenever users want to record transactions, review financial summaries, set budgets, manage shared expenses, analyze spending, or prepare for financial planning and tax filing.
+
+### Why is it needed?
+Manual tracking is error-prone and time-consuming. Users need real-time visibility, discipline, and automation to achieve financial goals and avoid overspending or disputes in shared finances.
+
+### How will it work?
+WalletWhiz will provide a modern, intuitive UI with tabs for each major functionality. Users can enter and manage transactions, set budgets, view dashboards and reports, track shared finances, and receive smart insights. Data will be stored locally (SQLite) with optional cloud backup. The system will be modular, scalable, and secure.
+
+---
+
+This problem statement establishes the foundation for the WalletWhiz project and its Software Requirement Specification (SRS).
